@@ -34,22 +34,25 @@ $plugin_lang = array();
 $plugin_lang['zh_cn'] = array
 (
 	'PL_WORK_HOURS_TITLE' => '工时估计',
-	'PL_WORK_HOURS_PLAN_HOURS' => '估计需要时间',
-	'PL_WORK_HOURS_LEFT_HOURS' => '剩余时间'
+	'PL_WORK_HOURS_PLAN_HOURS' => '估计工时',
+	'PL_WORK_HOURS_LEFT_HOURS' => '剩余工时',
+	'JS_PL_WORK_HOURS_MARK_TODO_READ_CONFIRM' => 'TODO的剩余时间为0，要将TODO标记为完成么？'
 );
 
 $plugin_lang['zh_tw'] = array
 (
 	'PL_WORK_HOURS_TITLE' => '工时估计',
 	'PL_WORK_HOURS_PLAN_HOURS' => '估计需要时间',
-	'PL_WORK_HOURS_LEFT_HOURS' => '剩余时间'
+	'PL_WORK_HOURS_LEFT_HOURS' => '剩余时间',
+	'JS_PL_WORK_HOURS_MARK_TODO_READ_CONFIRM' => 'TODO的剩余时间为0，要将TODO标记为完成么？'
 );
 
 $plugin_lang['us_en'] = array
 (
 	'PL_WORK_HOURS_TITLE' => 'Work Hours',
 	'PL_WORK_HOURS_PLAN_HOURS' => 'Plan Hours',
-	'PL_WORK_HOURS_LEFT_HOURS' => 'Left Hours'
+	'PL_WORK_HOURS_LEFT_HOURS' => 'Left Hours',
+	'JS_PL_WORK_HOURS_MARK_TODO_READ_CONFIRM' => 'The left hours of this TODO is 0, do you want to close this todo？'
 );
 
 plugin_append_lang( $plugin_lang );
@@ -74,16 +77,15 @@ add_action( 'PLUGIN_WORKHOURS_UPDATE' , 'plugin_workhours_update' );
 function plugin_workhours_update()
 {
 	$target = z(t(v('target')));
-	if(  $target != 'plan_hours' ||  $target != 'left_hours' ) 
+	if(  $target != 'plan_hours' &&  $target != 'left_hours' ) 
 		return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
 
 	$tid = intval(v('tid'));
 	if( $tid < 1 ) 
 		return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
 
-	$hours = intval(v('hours'));
-	if( $hours < 1 ) 
-		return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+	$hours = v('hours');
+	//if( $hours < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
 
 	$params = array();
 	$params['target'] = $target;
@@ -112,14 +114,15 @@ function api_workhours_update()
 	$target = z(t(v('target')));
 	if( !not_empty($target) ) 
 		return apiController::send_error(  LR_API_ARGS_ERROR , 'target CAN\'T EMPTY' );
-	if($target != 'plan_hours' ||  $target != 'left_hours' ) 
-		return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+	if($target != 'plan_hours' &&  $target != 'left_hours' ) 
+		return render( array( 'code' => 100002 , 'message' => 'bad args=') , 'rest' );
 		
 	$tid = intval(v('tid'));
 	if( intval( $tid ) < 1 ) return apiController::send_error( LR_API_ARGS_ERROR , 'TID NOT EXISTS' );
 
 	$hours = intval(v('hours'));
-	if( intval( $hours ) < 1 ) return apiController::send_error( LR_API_ARGS_ERROR , 'hours NOT CORRECT' );
+	if( (intval( $hours ) < 1 && $target == 'plan_hours') ||  !ctype_digit(strval(v('hours'))) )
+		return apiController::send_error( LR_API_ARGS_ERROR , 'hours NOT CORRECT' );
 
 	// check user
 	$tinfo = get_todo_info_by_id( $tid );

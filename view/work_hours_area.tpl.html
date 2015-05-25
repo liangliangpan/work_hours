@@ -2,25 +2,31 @@
 <h2 class="side_board"><?=__('PL_WORK_HOURS_TITLE')?> <span id="right_title"></span>
 </h2>
 
-<div id="workhours_container">
-  <div id='text_plan' ><?=__('PL_WORK_HOURS_PLAN_HOURS')?>: 
-    <a class="plan_num" href="javascript:update_plan_hours();void(0);" id="update_plan_hours"><?=$plan_hours?></a>
+<div id="workhours_container" tid="<?=$data['tid']?>">
+  <div ><span class='hours_txt_label'><?=__('PL_WORK_HOURS_PLAN_HOURS')?>: </span>
+    <a class="plan_num"  id="update_plan_hours"><?=$plan_hours?></a><input type='text' id='edit_plan_hours' style='display:none' class="edit_num">h
   </div>
-  <div id='text_left' ><?=__('PL_WORK_HOURS_LEFT_HOURS')?>:
-    <a class="plan_num" href="javascript:update_left_hours();void(0);" id="update_left_hours"><?=$left_hours?></a>
+  <div ><span class='hours_txt_label' id="hours_txt_label_left"><?=__('PL_WORK_HOURS_LEFT_HOURS')?>:</span>
+    <a class="plan_num"  id="update_left_hours"><?=$left_hours?></a><input type='text' id='edit_left_hours' style='display:none' class="edit_num">h
   </div>
   <div id='barchart'>
-    sss
+    <div class="progress">
+      <div class="bar" style="width: 00%;" id="workhours_progress"></div>
+    </div>
+    <span id="percent_num"></span>
+
   </div>
 </div>
 
 <?php if( $data['owner_uid'] == uid() && intval($data['details']['status']) != 3 ): ?>
 
 <script type="text/javascript">
-  var can_edit_work_hours = true;
+  var work_hours_can_edit = true;
 </script>
 <?php endif; ?>
 
 <div class="line"></div>
 
-
+<script type="text/javascript">
+  workHours.init();
+</script>
