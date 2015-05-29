@@ -50,3 +50,13 @@
 	left: 785.45px; 
 	height: 40px;
 }
+
+.dashboard_todo_plan_hours_bar
+{
+	background-color: #808080;
+	position: relative;
+	top: -5px;
+	height: 3px;
+	z-index: 100;
+	left: 5px;
+}

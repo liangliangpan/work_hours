@@ -89,6 +89,7 @@ function work_hours_dashboard_js()
 	}
 }
 
+
 add_action( 'PLUGIN_WORKHOURS_UPDATE' , 'plugin_workhours_update' );
 function plugin_workhours_update()
 {
