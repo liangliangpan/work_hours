@@ -73,6 +73,22 @@ function work_hours_js()
 	echo '<link href="plugin/work_hours/app.css" rel="stylesheet">';
 }
 
+add_action( 'UI_HEADER_AFTER' , 'work_hours_top_right_info' );
+function work_hours_top_right_info()
+{
+	if(g('c')== 'dashboard'){
+		echo render_html( array() , dirname(__FILE__) . DS .'view' . DS . 'work_hours_top_right_info.tpl.html' );
+	}
+}
+
+add_action( 'UI_DASHBOARD_TODO_SCRIPT_AFTER' , 'work_hours_dashboard_js' );
+function work_hours_dashboard_js()
+{
+	if(g('c')== 'dashboard'){
+		echo '<script type="text/javascript" src="plugin/work_hours/work_hours_dashboard.js"></script>';
+	}
+}
+
 add_action( 'PLUGIN_WORKHOURS_UPDATE' , 'plugin_workhours_update' );
 function plugin_workhours_update()
 {
@@ -105,6 +121,15 @@ function plugin_workhours_update()
 	}
 
 	return render( array( 'code' => 100001 , 'message' => 'can not get api content' ) , 'rest' );
+}
+
+add_action( 'PLUGIN_WORKHOURS_UNFINISHED_HOURS' , 'plugin_workhours_unfinished_hours' );
+function plugin_workhours_unfinished_hours()
+{
+	$data = get_line( "SELECT sum(left_hours) as left_hours FROM `work_hours` WHERE `uid` = '" . uid() . "' LIMIT 1" );
+	$tmp = get_line( "SELECT count(tid) as left_todos FROM `todo_user` WHERE `uid` = '" . uid() . "' and status !=3 LIMIT 1" );
+	$data['left_todos'] = $tmp['left_todos'];
+	return render($data , 'rest' );
 }
 
 

@@ -42,3 +42,11 @@
 	display: inline;
 	font-weight: bold;
 }
+
+#dashboard_workhours_info_area
+{
+	width: 360px; 
+	position: absolute; 
+	left: 785.45px; 
+	height: 40px;
+}
