@@ -88,7 +88,18 @@ var workHours ={
 					{
 						mark_todo_done(tid);
 					}
-				}	
+				}
+
+				//update bar
+				if(hourType == 'plan_hours'){
+					$("#t-"+tid+" #dash_plan_bar").attr('plan_hours',hourVal);
+				}else{
+					$("#t-"+tid+" #dash_plan_bar").attr('left_hours',hourVal);
+				}
+				var width = 100*(parseFloat($("#t-"+tid+" #dash_plan_bar").attr('plan_hours'))/20);
+				$("#t-"+tid+" #dash_plan_bar").css("width",width+"%");
+				width = 100*(parseFloat($("#t-"+tid+" #dash_plan_bar").attr('plan_hours') - $("#t-"+tid+" #dash_plan_bar").attr('left_hours'))/20);
+				$("#t-"+tid+" #dash_progress_bar").css("width",width+"%");
 			}
 			else
 			{
